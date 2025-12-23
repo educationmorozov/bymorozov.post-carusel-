@@ -87,39 +87,44 @@ const App: React.FC = () => {
       const newValidations: ValidationResult[] = [];
 
       for (let i = 0; i < slides.length; i++) {
-        const override = slideOverrides[slides[i].id] || { fontSizeScale: 1, lineHeightScale: 1.35 };
-        const { blob, validation } = await validateAndRender({
-          slide: slides[i],
-          format,
-          carouselType,
-          templateId: selectedTemplate,
-          nickname,
-          nicknamePosition,
-          avatarUrl,
-          bgImageUrl,
-          customBgColor,
-          customTextColor,
-          fontPair: fontPairToUse,
-          totalSlides: slides.length,
-          slideIndex: i,
-          fontSizeScale: override.fontSizeScale,
-          lineHeightScale: override.lineHeightScale,
-          textAlign: override.textAlign || globalTextAlign,
-          showSlideCount,
-          slideCountPosition,
-          finalSlideData: slides[i].isSpecialFinal ? {
-            textBefore: finalSlideConfig.textBefore,
-            codeWord: finalSlideConfig.codeWord,
-            textAfter: finalSlideConfig.textAfter,
-            blogTopic: finalSlideConfig.blogTopic,
-            verticalOffset: finalSlideConfig.verticalOffset,
-            brandingOffset: finalSlideConfig.brandingOffset,
-            variant: finalSlideConfig.designVariant
-          } : undefined
-        });
+        try {
+          const override = slideOverrides[slides[i].id] || { fontSizeScale: 1, lineHeightScale: 1.35 };
+          const { blob, validation } = await validateAndRender({
+            slide: slides[i],
+            format,
+            carouselType,
+            templateId: selectedTemplate,
+            nickname,
+            nicknamePosition,
+            avatarUrl,
+            bgImageUrl,
+            customBgColor,
+            customTextColor,
+            fontPair: fontPairToUse,
+            totalSlides: slides.length,
+            slideIndex: i,
+            fontSizeScale: override.fontSizeScale,
+            lineHeightScale: override.lineHeightScale,
+            textAlign: override.textAlign || globalTextAlign,
+            showSlideCount,
+            slideCountPosition,
+            finalSlideData: slides[i].isSpecialFinal ? {
+              textBefore: finalSlideConfig.textBefore,
+              codeWord: finalSlideConfig.codeWord,
+              textAfter: finalSlideConfig.textAfter,
+              blogTopic: finalSlideConfig.blogTopic,
+              verticalOffset: finalSlideConfig.verticalOffset,
+              brandingOffset: finalSlideConfig.brandingOffset,
+              variant: finalSlideConfig.designVariant
+            } : undefined
+          });
 
-        if (blob) newImages.push(URL.createObjectURL(blob));
-        newValidations.push(validation);
+          if (blob) newImages.push(URL.createObjectURL(blob));
+          newValidations.push(validation);
+        } catch (err) {
+          console.error(`Error rendering slide ${i}:`, err);
+          newValidations.push({ slideId: slides[i].id, isValid: false, error: 'Ошибка отрисовки' });
+        }
       }
 
       setGeneratedImages(newImages);
@@ -129,7 +134,6 @@ const App: React.FC = () => {
     return () => clearTimeout(debounceTimer);
   }, [slides, text, format, carouselType, selectedTemplate, selectedFontPair, nickname, nicknamePosition, avatarUrl, customHeaderFont, customBodyFont, customBgColor, customTextColor, bgImageUrl, globalTextAlign, slideOverrides, showSlideCount, slideCountPosition, finalSlideConfig]);
 
-  // Восстановление позиции прокрутки
   useEffect(() => {
     if (mockupScrollRef.current && generatedImages.length > 0) {
        const width = mockupScrollRef.current.offsetWidth;
@@ -197,8 +201,12 @@ const App: React.FC = () => {
     setIsGenerating(true);
     const zip = new JSZip();
     for (let i = 0; i < generatedImages.length; i++) {
-      const res = await fetch(generatedImages[i]);
-      zip.file(`carousel_${i + 1}.png`, await res.blob());
+      try {
+        const res = await fetch(generatedImages[i]);
+        zip.file(`carousel_${i + 1}.png`, await res.blob());
+      } catch (e) {
+        console.error("Zip download error:", e);
+      }
     }
     const content = await zip.generateAsync({ type: 'blob' });
     saveAs(content, 'carousel_bymorozov.zip');

@@ -25,7 +25,6 @@ export const parseTextToSlides = (text: string, method: SplitMethod): SlideData[
     .filter(c => c.length > 0)
     .map((text, index) => ({
       id: index + 1,
-      text,
-      lines: text.split('\n')
+      text
     }));
 };

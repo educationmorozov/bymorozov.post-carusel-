@@ -76,17 +76,16 @@ const App: React.FC = () => {
       </header>
 
       <main className="max-w-7xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8 items-start">
-        {/* НАСТРОЙКИ (ЛЕВАЯ ЧАСТЬ) */}
         <div className="space-y-12 pb-20">
           <section className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-black uppercase tracking-tight">1. Текст</h2>
+              <h2 className="text-xl font-black uppercase">1. Текст</h2>
               <button onClick={() => setText('')} className="p-2 text-white/10 hover:text-red-500 transition-colors"><Trash2 size={20}/></button>
             </div>
-            <textarea value={text} onChange={e => setText(e.target.value)} placeholder="Напишите текст..." className="w-full h-64 bg-white/[0.03] border border-white/10 rounded-[32px] p-8 outline-none focus:border-white/30 text-lg resize-none" />
+            <textarea value={text} onChange={e => setText(e.target.value)} className="w-full h-64 bg-white/[0.03] border border-white/10 rounded-[32px] p-8 outline-none focus:border-white/30 text-lg resize-none" />
             <div className="grid grid-cols-3 gap-2">
               {['empty-line', 'separator-line', 'slide-number'].map(m => (
-                <button key={m} onClick={() => setSplitMethod(m as SplitMethod)} className={`py-4 rounded-2xl border text-[9px] font-black uppercase tracking-widest transition-all ${splitMethod === m ? 'bg-white text-black border-white' : 'border-white/5 bg-white/[0.02] text-white/40 hover:border-white/20'}`}>
+                <button key={m} onClick={() => setSplitMethod(m as SplitMethod)} className={`py-4 rounded-2xl border text-[9px] font-black uppercase tracking-widest ${splitMethod === m ? 'bg-white text-black border-white' : 'border-white/5 bg-white/[0.02] text-white/40'}`}>
                   {m === 'empty-line' ? 'Абзац' : m === 'separator-line' ? '---' : 'Слайд N:'}
                 </button>
               ))}
@@ -95,28 +94,28 @@ const App: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             <section className="space-y-4">
-               <h2 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 flex items-center gap-2"><Smartphone size={12}/> Формат</h2>
+               <h2 className="text-[10px] font-black uppercase opacity-30 flex items-center gap-2"><Smartphone size={12}/> Формат</h2>
                <div className="flex gap-2">
                  {['1080x1350', '1080x1080'].map(f => (
-                   <button key={f} onClick={() => setFormat(f as CarouselFormat)} className={`flex-1 py-4 rounded-2xl border text-[10px] font-black tracking-widest transition-all ${format === f ? 'bg-white text-black border-white' : 'border-white/5 bg-white/[0.02] text-white/40'}`}>{f === '1080x1350' ? '4:5 (POST)' : '1:1 (SQ)'}</button>
+                   <button key={f} onClick={() => setFormat(f as CarouselFormat)} className={`flex-1 py-4 rounded-2xl border text-[10px] font-black ${format === f ? 'bg-white text-black border-white' : 'border-white/5 bg-white/[0.02]'}`}>{f === '1080x1350' ? '4:5' : '1:1'}</button>
                  ))}
                </div>
             </section>
             <section className="space-y-4">
-               <h2 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30 flex items-center gap-2"><TypeIcon size={12}/> Текст</h2>
+               <h2 className="text-[10px] font-black uppercase opacity-30 flex items-center gap-2"><TypeIcon size={12}/> Текст</h2>
                <div className="flex gap-2">
                  {['left', 'center'].map(a => (
-                   <button key={a} onClick={() => setTextAlign(a as TextAlign)} className={`flex-1 py-4 rounded-2xl border text-[10px] font-black tracking-widest transition-all ${textAlign === a ? 'bg-white text-black border-white' : 'border-white/5 bg-white/[0.02] text-white/40'}`}>{a === 'left' ? 'СЛЕВА' : 'ЦЕНТР'}</button>
+                   <button key={a} onClick={() => setTextAlign(a as TextAlign)} className={`flex-1 py-4 rounded-2xl border text-[10px] font-black ${textAlign === a ? 'bg-white text-black border-white' : 'border-white/5 bg-white/[0.02]'}`}>{a === 'left' ? 'СЛЕВА' : 'ЦЕНТР'}</button>
                  ))}
                </div>
             </section>
           </div>
 
           <section className="space-y-6">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30">Дизайн шаблона</h2>
+            <h2 className="text-[10px] font-black uppercase opacity-30">Дизайн</h2>
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
               {TEMPLATES.map(t => (
-                <button key={t.id} onClick={() => setSelectedTemplate(t.id)} className={`p-4 rounded-2xl border aspect-square flex flex-col items-center justify-center gap-2 transition-all ${selectedTemplate === t.id ? 'border-white scale-105 shadow-xl bg-white/[0.05]' : 'border-white/5 opacity-40 hover:opacity-100 bg-white/[0.02]'}`} style={{ background: t.bgColor, color: t.textColor }}>
+                <button key={t.id} onClick={() => setSelectedTemplate(t.id)} className={`p-4 rounded-2xl border aspect-square flex flex-col items-center justify-center gap-2 transition-all ${selectedTemplate === t.id ? 'border-white scale-105 bg-white/[0.05]' : 'border-white/5 opacity-40 hover:opacity-100 bg-white/[0.02]'}`} style={{ background: t.bgColor, color: t.textColor }}>
                   <Layout size={20}/>
                   <span className="text-[7px] font-black uppercase text-center leading-tight">{t.name}</span>
                 </button>
@@ -125,18 +124,18 @@ const App: React.FC = () => {
           </section>
 
           <section className="space-y-6">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30">Личный бренд</h2>
+            <h2 className="text-[10px] font-black uppercase opacity-30">Брендинг</h2>
             <div className="bg-white/[0.03] p-8 rounded-[40px] space-y-6 border border-white/5 shadow-2xl">
               <div className="flex flex-col sm:flex-row gap-6 items-center">
-                <div onClick={() => fileRef.current?.click()} className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center cursor-pointer border-2 border-dashed border-white/10 overflow-hidden group hover:border-white/40 transition-all">
+                <div onClick={() => fileRef.current?.click()} className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center cursor-pointer border-2 border-dashed border-white/10 overflow-hidden hover:border-white/40 transition-all">
                   {avatarUrl ? <img src={avatarUrl} className="w-full h-full object-cover"/> : <ImageIcon className="opacity-10" size={32}/>}
                   <input ref={fileRef} type="file" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) { const r = new FileReader(); r.onloadend = () => setAvatarUrl(r.result as string); r.readAsDataURL(f); } }}/>
                 </div>
-                <input value={nickname} onChange={e => setNickname(e.target.value)} placeholder="@bymorozov" className="flex-1 w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none font-bold placeholder:opacity-10" />
+                <input value={nickname} onChange={e => setNickname(e.target.value)} placeholder="@bymorozov" className="flex-1 w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none font-bold" />
               </div>
               <div className="grid grid-cols-3 gap-2">
                 {['bottom-left', 'bottom-right', 'top-right'].map(p => (
-                  <button key={p} onClick={() => setNicknamePosition(p as NicknamePosition)} className={`py-3 rounded-xl border text-[8px] font-black uppercase tracking-widest transition-all ${nicknamePosition === p ? 'bg-white text-black border-white' : 'border-white/5 text-white/40 bg-black/20'}`}>{p.replace('-',' ')}</button>
+                  <button key={p} onClick={() => setNicknamePosition(p as NicknamePosition)} className={`py-3 rounded-xl border text-[8px] font-black uppercase ${nicknamePosition === p ? 'bg-white text-black border-white' : 'border-white/5 text-white/40'}`}>{p.replace('-',' ')}</button>
                 ))}
               </div>
             </div>
@@ -144,7 +143,7 @@ const App: React.FC = () => {
 
           <section className="space-y-6">
             <div className="flex items-center justify-between bg-white/5 p-6 rounded-[32px] border border-white/5">
-              <h2 className="text-xl font-black uppercase tracking-tight flex items-center gap-4"><Zap size={20}/> Lead Magnet</h2>
+              <h2 className="text-xl font-black uppercase flex items-center gap-4"><Zap size={20}/> Lead Magnet</h2>
               <button onClick={() => setFinalConfig(p => ({...p, enabled: !p.enabled}))} className={`w-14 h-7 rounded-full relative transition-all ${finalConfig.enabled ? 'bg-white' : 'bg-white/10'}`}>
                 <div className={`absolute top-1.5 w-4 h-4 rounded-full transition-all ${finalConfig.enabled ? 'right-1.5 bg-black' : 'left-1.5 bg-white/30'}`} />
               </button>
@@ -155,50 +154,38 @@ const App: React.FC = () => {
                   <input value={finalConfig.codeWord} onChange={e => setFinalConfig(p => ({...p, codeWord: e.target.value}))} placeholder="Слово" className="bg-white/5 border border-white/10 rounded-2xl p-4 font-bold" />
                   <input value={finalConfig.blogTopic} onChange={e => setFinalConfig(p => ({...p, blogTopic: e.target.value}))} placeholder="Тема блога" className="bg-white/5 border border-white/10 rounded-2xl p-4 font-bold" />
                 </div>
-                <div className="space-y-4">
-                  <div className="flex justify-between text-[10px] font-black uppercase opacity-40"><span>Высота текста</span><span>{finalConfig.verticalOffset}%</span></div>
-                  <input type="range" min="0" max="100" value={finalConfig.verticalOffset} onChange={e => setFinalConfig(p => ({...p, verticalOffset: parseInt(e.target.value)}))} className="w-full accent-white" />
-                </div>
+                <input type="range" min="0" max="100" value={finalConfig.verticalOffset} onChange={e => setFinalConfig(p => ({...p, verticalOffset: parseInt(e.target.value)}))} className="w-full accent-white" />
               </div>
             )}
           </section>
         </div>
 
-        {/* ПРЕДПРОСМОТР (ПРАВАЯ ЧАСТЬ) */}
         <div className="lg:sticky lg:top-32 space-y-12 flex flex-col items-center">
-          <div className="w-full max-w-[400px] aspect-[4/5] bg-[#0a0a0a] rounded-[60px] overflow-hidden shadow-[0_60px_120px_-30px_rgba(0,0,0,0.9)] border border-white/10 relative group">
+          <div className="w-full max-w-[400px] aspect-[4/5] bg-[#0a0a0a] rounded-[60px] overflow-hidden shadow-2xl border border-white/10 relative group">
             {images.length > 0 ? (
               <img src={images[previewIdx]} className="w-full h-full object-contain animate-in fade-in duration-500" />
             ) : (
-              <div className="w-full h-full flex items-center justify-center p-12 text-center text-[10px] font-black uppercase tracking-[0.5em] opacity-10">Ожидание...</div>
+              <div className="w-full h-full flex items-center justify-center opacity-10 font-black uppercase tracking-widest">Текст...</div>
             )}
             {validations[previewIdx] && !validations[previewIdx].isValid && (
-              <div className="absolute inset-0 bg-red-600/30 backdrop-blur-md flex items-center justify-center p-10 text-center animate-in fade-in duration-300">
-                <div className="bg-black p-8 rounded-[40px] text-[10px] font-black uppercase border border-red-500 shadow-2xl tracking-widest leading-relaxed">Текст не помещается!</div>
+              <div className="absolute inset-0 bg-red-600/30 backdrop-blur-md flex items-center justify-center p-10">
+                <div className="bg-black p-8 rounded-[40px] text-[10px] font-black uppercase border border-red-500 shadow-2xl">Текст не помещается!</div>
               </div>
             )}
             <div className="absolute top-1/2 -translate-y-1/2 flex justify-between w-full px-6 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button onClick={() => setPreviewIdx(p => Math.max(0, p-1))} className="w-14 h-14 bg-black/80 backdrop-blur-xl rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all"><ChevronLeft size={24}/></button>
-              <button onClick={() => setPreviewIdx(p => Math.min(images.length-1, p+1))} className="w-14 h-14 bg-black/80 backdrop-blur-xl rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all"><ChevronRight size={24}/></button>
+              <button onClick={() => setPreviewIdx(p => Math.max(0, p-1))} className="w-14 h-14 bg-black/80 backdrop-blur-xl rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all"><ChevronLeft/></button>
+              <button onClick={() => setPreviewIdx(p => Math.min(images.length-1, p+1))} className="w-14 h-14 bg-black/80 backdrop-blur-xl rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all"><ChevronRight/></button>
             </div>
           </div>
 
           <div className="w-full max-w-sm space-y-6">
-            <button onClick={downloadZip} disabled={isGenerating || images.length === 0 || hasErrors} className="w-full py-8 bg-white text-black rounded-full font-black uppercase tracking-[0.25em] shadow-[0_20px_60px_-10px_rgba(255,255,255,0.3)] hover:scale-105 active:scale-95 transition-all disabled:opacity-10 flex items-center justify-center gap-5">
+            <button onClick={downloadZip} disabled={isGenerating || images.length === 0 || hasErrors} className="w-full py-8 bg-white text-black rounded-full font-black uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all disabled:opacity-10 flex items-center justify-center gap-5">
               {isGenerating ? <RefreshCcw className="animate-spin" size={24}/> : <Download size={24}/>} 
               {isGenerating ? 'РЕНДЕРИНГ...' : 'СКАЧАТЬ ZIP'}
             </button>
-            <div className="grid grid-cols-2 gap-4">
-               <button onClick={() => saveAs(images[previewIdx], `bymorozov_slide_${previewIdx+1}.png`)} disabled={images.length === 0} className="p-5 bg-white/[0.03] border border-white/10 rounded-[28px] text-[10px] font-black uppercase tracking-widest hover:bg-white/[0.06] transition-all flex items-center justify-center gap-3"><Download size={16}/> СЛАЙД</button>
-               <button onClick={updatePreview} className="p-5 bg-white/[0.03] border border-white/10 rounded-[28px] text-[10px] font-black uppercase tracking-widest hover:bg-white/[0.06] transition-all flex items-center justify-center gap-3"><RefreshCcw size={16}/> ОБНОВИТЬ</button>
-            </div>
           </div>
         </div>
       </main>
-      
-      <footer className="mt-32 p-16 text-center border-t border-white/5 opacity-10">
-        <p className="text-[10px] font-black uppercase tracking-[0.8em]">© 2024 • АКСЕЛЕРАТОР • BYMOROZOV</p>
-      </footer>
     </div>
   );
 };

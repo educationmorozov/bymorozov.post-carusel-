@@ -67,7 +67,7 @@ export const validateAndRender = async (params: RenderParams): Promise<{ blob: B
   canvas.height = spec.height;
   const ctx = canvas.getContext('2d')!;
 
-  // 1. Фон
+  // Background
   if (template.id === 'gradient') {
     const g = ctx.createLinearGradient(0, 0, spec.width, spec.height);
     g.addColorStop(0, '#121212'); g.addColorStop(1, '#2c2c2c');
@@ -77,7 +77,7 @@ export const validateAndRender = async (params: RenderParams): Promise<{ blob: B
   }
   ctx.fillRect(0, 0, spec.width, spec.height);
 
-  // 2. Декорации
+  // Decor
   if (template.id === 'notes') {
     ctx.strokeStyle = 'rgba(0,0,0,0.06)';
     ctx.lineWidth = 2;
@@ -105,19 +105,15 @@ export const validateAndRender = async (params: RenderParams): Promise<{ blob: B
   const hFont = params.fontPair.headerFont;
   const bFont = params.fontPair.bodyFont;
 
-  // 3. Финальный слайд (Lead Magnet)
   if (params.slide.isSpecialFinal && params.finalSlideConfig) {
     const c = params.finalSlideConfig;
     ctx.fillStyle = baseTextColor;
     ctx.textAlign = 'center';
     const midY = (spec.height * 0.15) + (spec.height * 0.45 * (c.verticalOffset / 100));
-    
     ctx.font = `400 ${spec.width * 0.045}px "${bFont}"`;
     ctx.fillText(c.textBefore, spec.width / 2, midY);
-    
     ctx.font = `900 ${spec.width * 0.08}px "${hFont}"`;
     ctx.fillText(c.codeWord, spec.width / 2, midY + 110);
-    
     ctx.font = `400 ${spec.width * 0.045}px "${bFont}"`;
     ctx.fillText(c.textAfter, spec.width / 2, midY + 220);
 
@@ -136,7 +132,6 @@ export const validateAndRender = async (params: RenderParams): Promise<{ blob: B
     ctx.fillText(`блог про ${c.blogTopic || 'контент'}`, params.avatarUrl ? spec.padding + 190 : spec.padding, bY + 115);
     ctx.globalAlpha = 1;
   } else {
-    // 4. Обычные слайды
     let fSize = spec.width * (params.slideIndex === 0 ? 0.088 : 0.065);
     const minSize = spec.minFontSize;
     const maxWidth = spec.width - drawPadding * 2;
@@ -152,7 +147,6 @@ export const validateAndRender = async (params: RenderParams): Promise<{ blob: B
         const segs = parseRichText(p);
         let curLineSegs: any[] = [];
         let curW = 0;
-        
         segs.forEach(s => {
           const words = s.text.split(' ');
           words.forEach((w, wi) => {
@@ -196,12 +190,10 @@ export const validateAndRender = async (params: RenderParams): Promise<{ blob: B
       curY += l.f * 1.4;
     });
 
-    // Нумерация и ник
     ctx.globalAlpha = 0.4;
     ctx.fillStyle = baseTextColor;
     ctx.font = `600 ${spec.width * 0.03}px "${bFont}"`;
     const nick = params.nickname || '@username';
-    
     if (params.nicknamePosition === 'bottom-left') {
       ctx.textAlign = 'left';
       ctx.fillText(nick, spec.padding, spec.height - spec.padding / 2);
@@ -212,7 +204,6 @@ export const validateAndRender = async (params: RenderParams): Promise<{ blob: B
       ctx.textAlign = 'right';
       ctx.fillText(nick, spec.width - spec.padding, spec.padding / 2 + 40);
     }
-    
     ctx.textAlign = 'right';
     ctx.fillText(`${params.slideIndex + 1}/${params.totalSlides}`, spec.width - spec.padding, spec.height - spec.padding / 2);
     ctx.globalAlpha = 1;

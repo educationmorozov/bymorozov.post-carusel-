@@ -1,14 +1,7 @@
 
 export type CarouselFormat = '1080x1080' | '1080x1350';
-
-export type CarouselType = 'standard' | 'daily-plan' | 'bullets' | 'list';
-
-export type NicknamePosition = 'bottom-left' | 'bottom-right' | 'bottom-center' | 'top-right' | 'top-center' | 'top-left';
-
-export type TextAlign = 'left' | 'center' | 'justify';
-
-export type SlideCountPosition = 'top-right' | 'bottom-right';
-
+export type NicknamePosition = 'bottom-left' | 'bottom-right' | 'top-right';
+export type TextAlign = 'left' | 'center';
 export type SplitMethod = 'empty-line' | 'separator-line' | 'slide-number';
 
 export interface SlideData {
@@ -24,13 +17,14 @@ export interface ValidationResult {
   fontSizeUsed?: number;
 }
 
-export type TemplateId = 'white' | 'black' | 'red' | 'green' | 'gray' | 'navy' | 'blue' | 'orange' | 'custom-color' | 'custom-image';
+export type TemplateId = 'white' | 'black' | 'pastel' | 'gradient' | 'notes' | 'card';
 
 export interface TemplateConfig {
   id: TemplateId;
   name: string;
   bgColor: string;
   textColor: string;
+  accentColor?: string;
 }
 
 export interface FontPair {
@@ -40,19 +34,12 @@ export interface FontPair {
   bodyFont: string;
 }
 
-export interface SlideOverride {
-  fontSizeScale: number;
-  lineHeightScale: number;
-  textAlign?: TextAlign;
-}
-
 export interface FinalSlideConfig {
   enabled: boolean;
   textBefore: string;
   codeWord: string;
   textAfter: string;
   blogTopic: string;
-  verticalOffset: number; // 0 to 100
-  brandingOffset: number; // 0 to 100
-  designVariant: number;
+  verticalOffset: number; 
+  brandingOffset: number;
 }

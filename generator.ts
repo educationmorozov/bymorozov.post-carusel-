@@ -65,7 +65,9 @@ export const validateAndRender = async (params: RenderParams): Promise<{ blob: B
   const canvas = document.createElement('canvas');
   canvas.width = spec.width;
   canvas.height = spec.height;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = canvas.getContext('2d');
+  
+  if (!ctx) return { blob: null, validation: { slideId: params.slide.id, isValid: false, error: 'Canvas not supported' } };
 
   // Background
   if (template.id === 'gradient') {
@@ -77,7 +79,7 @@ export const validateAndRender = async (params: RenderParams): Promise<{ blob: B
   }
   ctx.fillRect(0, 0, spec.width, spec.height);
 
-  // Decor
+  // Notes decor
   if (template.id === 'notes') {
     ctx.strokeStyle = 'rgba(0,0,0,0.06)';
     ctx.lineWidth = 2;
@@ -94,8 +96,11 @@ export const validateAndRender = async (params: RenderParams): Promise<{ blob: B
     ctx.fillStyle = '#ffffff';
     const r = 50; const mx = 70, my = 70, mw = spec.width - 140, mh = spec.height - 140;
     ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(mx, my, mw, mh, r);
-    else ctx.rect(mx, my, mw, mh);
+    if (ctx.roundRect) {
+      ctx.roundRect(mx, my, mw, mh, r);
+    } else {
+      ctx.rect(mx, my, mw, mh);
+    }
     ctx.fill();
     ctx.restore();
     drawPadding = 140;
@@ -104,6 +109,8 @@ export const validateAndRender = async (params: RenderParams): Promise<{ blob: B
   const baseTextColor = template.textColor;
   const hFont = params.fontPair.headerFont;
   const bFont = params.fontPair.bodyFont;
+
+  let isValid = true;
 
   if (params.slide.isSpecialFinal && params.finalSlideConfig) {
     const c = params.finalSlideConfig;
@@ -121,8 +128,13 @@ export const validateAndRender = async (params: RenderParams): Promise<{ blob: B
     if (params.avatarUrl) {
       const img = new Image();
       img.src = params.avatarUrl;
-      await new Promise(r => img.onload = r);
-      drawAvatar(ctx, img, spec.padding, bY, 160);
+      await new Promise(r => {
+        img.onload = r;
+        img.onerror = r;
+      });
+      if (img.complete && img.naturalWidth > 0) {
+        drawAvatar(ctx, img, spec.padding, bY, 160);
+      }
     }
     ctx.textAlign = 'left';
     ctx.font = `900 ${spec.width * 0.052}px "${hFont}"`;
@@ -151,6 +163,7 @@ export const validateAndRender = async (params: RenderParams): Promise<{ blob: B
           const words = s.text.split(' ');
           words.forEach((w, wi) => {
             const word = w + (wi === words.length - 1 ? '' : ' ');
+            // Fix: Replace undefined 'l.h' with 'isH' which is in scope from paragraphs.forEach
             ctx.font = `${s.isBold || isH ? '900' : '400'} ${curSize}px "${isH ? hFont : bFont}"`;
             const ww = ctx.measureText(word).width;
             if (curW + ww > maxWidth && curLineSegs.length > 0) {
@@ -173,7 +186,7 @@ export const validateAndRender = async (params: RenderParams): Promise<{ blob: B
       fSize -= 1.5;
     }
 
-    const isValid = fSize >= minSize;
+    isValid = fSize >= minSize;
     const totalH = lines.reduce((acc, l) => acc + l.f * 1.4, 0);
     let curY = (spec.height - totalH) / 2;
 
@@ -207,8 +220,7 @@ export const validateAndRender = async (params: RenderParams): Promise<{ blob: B
     ctx.textAlign = 'right';
     ctx.fillText(`${params.slideIndex + 1}/${params.totalSlides}`, spec.width - spec.padding, spec.height - spec.padding / 2);
     ctx.globalAlpha = 1;
-
-    return new Promise(r => canvas.toBlob(blob => r({ blob, validation: { slideId: params.slide.id, isValid, error: isValid ? undefined : 'Текст не помещается' } }), 'image/png'));
   }
-  return new Promise(r => canvas.toBlob(blob => r({ blob, validation: { slideId: params.slide.id, isValid: true } }), 'image/png'));
+
+  return new Promise(r => canvas.toBlob(blob => r({ blob, validation: { slideId: params.slide.id, isValid } }), 'image/png'));
 };
